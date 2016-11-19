@@ -1,0 +1,73 @@
+[user]
+	name = Luis Rei
+	email = me@luisrei.com
+	editor = vim
+
+[merge]
+    tool = vimdiff
+
+[diff]
+    tool = vimdiff
+
+[core]
+	quotepath = false
+	pager = less -FRSX
+	excludesfile = ~/.cvsignore
+	editor = vim
+	
+[color]
+	ui = auto
+
+[credential]
+	helper = osxkeychain
+
+[alias]
+    # Staging
+    a = add
+    aa = add --all
+
+    # Branch
+    b = branch
+
+    # Commit
+    c = commit
+    cm = commit -m
+    amend = commit --amend
+
+    # Checkout
+    co = checkout
+    cb = checkout -b
+
+    # Diff
+    d = diff --color-words
+    dc = diff --cached
+    ds = diff --stat=160,120
+    dh1 = diff HEAD~1
+
+    # Divergence (commits we added and commits remote added)
+    div = divergence
+
+    # Fetch
+    fa = fetch --all
+
+    # Goodness (summary of diff lines added/removed/total)
+    gn = goodness
+    gnc = goodness --cached
+
+    # Status / Logging
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    s = status
+
+[push]
+	default = simple
+	followTags = true
+
+[filter "media"]
+	clean = git media clean %f
+	smudge = git media smudge %f
+	required = true
+
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true

@@ -1,0 +1,28 @@
+# See also: https://github.com/github/gitignore
+
+# C
+*.o
+*.out
+*.so
+*.so.*
+
+# OSX
+.DS_Store
+
+# Logs
+*.log
+
+# Runtime files
+*.pid
+*.lock
+
+# Node
+node_modules
+
+# Python
+*.pyc
+.venv/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
