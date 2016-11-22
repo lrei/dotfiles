@@ -84,6 +84,8 @@ fi
 if [[ `uname` == 'Linux' ]]
 then
         export LINUX=1
+        alias pbcopy='xsel --clipboard --input'
+        alias pbpaste='xsel --clipboard --output'
 else
         export LINUX=
 fi
@@ -95,13 +97,42 @@ then
     source $HOME/.zshrc_resolution
 fi
 
+# Finally, show a fortune when we start the terminal
+fortune
+
 
 # ALIAS
-alias s='git s'
+# basic
 alias p='pbpaste'
 alias c='tr -d '\n' | pbcopy'
-alias myip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print \$2}'"
-alias ll='ls -la'
 
+# nix  common
+alias mkdir="mkdir -p"
+alias v="vim"
+alias ll='ls -la'
+alias lm='ls -alt | head -n 5'
+alias ps='ps aux'
+alias psg='ps aux | grep '
+
+# git
+alias s='git s'
+
+# github 
+# gist-pastefilename.ext -- create private/public Gist from the clipboard 
+# contents and copy the url to the clipboard
+alias gist-paste="gist --private --copy --paste --filename"
+alias gist-ppaste="gist --copy --paste --filename"
+# gist-file filename.ext -- create private/eublic Gist from a file
+alias gist-file="gist --private --copy"
+alias gist-pfile="gist --private --copy"
+
+# get my internal ip address
+alias myip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print \$2}'"
+
+# util
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
+# Convert line endings to UNIX
+alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
+# Pretty print etc, used as a pipe (needs language name, autodect works poorly)
+alias prp="pygmentize -O style=monokai -f console256 -l "
