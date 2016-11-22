@@ -48,6 +48,14 @@ else
   export EDITOR='vim'
 fi
 
+# GPG agent
+if [ -f ~/.gnupg/.gpg-agent-info ] && [ -n "$(pgrep gpg-agent)" ]; then
+    source ~/.gnupg/.gpg-agent-info
+    export GPG_AGENT_INFO
+else
+    eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
+fi
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -67,6 +75,7 @@ then
         export OSX=1
         # z
         . `brew --prefix`/etc/profile.d/z.sh
+        alias o='open'
 else
         export OSX=
 fi
@@ -85,3 +94,14 @@ if [[ -a $HOME/.zshrc_resolution ]]
 then
     source $HOME/.zshrc_resolution
 fi
+
+
+# ALIAS
+alias s='git s'
+alias p='pbpaste'
+alias c='tr -d '\n' | pbcopy'
+alias myip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print \$2}'"
+alias ll='ls -la'
+
+# Download file and save it with filename of remote file
+alias get="curl -O -L"
