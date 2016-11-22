@@ -1,2 +1,3 @@
 *.gpg
 random_seed
+.gpg-agent-info
