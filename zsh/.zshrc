@@ -33,9 +33,19 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git brew lein npm osx pip virtualenvwrapper)
+plugins=(git brew lein npm osx pip virtualenvwrapper vi-mode)
 
 source $ZSH/oh-my-zsh.sh
+
+# VI MODE
+function zle-line-init zle-keymap-select {
+    BULLETTRAIN_CUSTOM_MSG="${${KEYMAP/vicmd/[N]}/(main|viins)/[I]}"
+    zle reset-prompt
+    zle -R
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
 
 # Language (it's actually required e.g. for some python stuff)
 export LANG=en_US.UTF-8
