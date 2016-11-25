@@ -83,6 +83,8 @@ fi
 if [[ `uname` == 'Darwin' ]]
 then
         export OSX=1
+        # Brew analytics
+        export HOMEBREW_NO_ANALYTICS=1
         # z
         . `brew --prefix`/etc/profile.d/z.sh
         alias o='open'
