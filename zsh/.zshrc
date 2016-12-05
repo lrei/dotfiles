@@ -79,6 +79,10 @@ fi
 # if necessary, ensure terminal colors
 # export TERM="xterm-256color"
 
+
+# Languages, libs
+eval "$(rbenv init -)"
+
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
 then
@@ -146,3 +150,5 @@ alias get="curl -O -L"
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 # Pretty print etc, used as a pipe (needs language name, autodect works poorly)
 alias prp="pygmentize -O style=monokai -f console256 -l "
+# Pretty print JSON line
+alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
