@@ -12,7 +12,9 @@ BULLETTRAIN_PROMPT_SEPARATE_LINE=false
 BULLETTRAIN_PROMPT_ADD_NEWLIN=false
 BULLETTRAIN_TIME_SHOW=false
 BULLETTRAIN_CONTEXT_SHOW=true
-BULLETTRAIN_DIR_SHOW=false  # already shown in tmux theme
+BULLETTRAIN_DIR_SHOW=false  # Already shown in tmux theme
+BULLETTRAIN_RUBY_BG=red
+
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -77,11 +79,15 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # if necessary, ensure terminal colors
-# export TERM="xterm-256color"
+export TERM="xterm-256color"
 
 
 # Languages, libs
+# ruby: rbenv
 eval "$(rbenv init -)"
+# node: nvm
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -133,8 +139,8 @@ alias psg='ps aux | grep '
 # git
 alias s='git s'
 
-# github 
-# gist-pastefilename.ext -- create private/public Gist from the clipboard 
+# github
+# gist-pastefilename.ext -- create private/public Gist from the clipboard
 # contents and copy the url to the clipboard
 alias gist-paste="gist --private --copy --paste --filename"
 alias gist-ppaste="gist --copy --paste --filename"
