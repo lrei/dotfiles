@@ -6,15 +6,20 @@ ZSH_CUSTOM=$HOME/.zshcustom
 
 # Theme
 ZSH_THEME="bullet-train"
+# - Spaceship
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
-BULLETTRAIN_PROMPT_SEPARATE_LINE=false
+# - BULLETTRAIN
+BULLETTRAIN_PROMPT_SEPARATE_LINE=true
 BULLETTRAIN_PROMPT_ADD_NEWLIN=false
-BULLETTRAIN_TIME_SHOW=false
+BULLETTRAIN_TIME_SHOW=false             # shown in tmux theme
 BULLETTRAIN_CONTEXT_SHOW=true
-BULLETTRAIN_DIR_SHOW=false  # Already shown in tmux theme
-BULLETTRAIN_RUBY_BG=red
-
+BULLETTRAIN_DIR_SHOW=true
+BULLETTRAIN_DIR_EXTENDED=0
+BULLETTRAIN_NVM_SHOW=false
+BULLETTRAIN_NVM_BG=yellow
+BULLETTRAIN_NVM_FG=black
+BULLETTRAIN_RUBY_SHOW=false
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -93,6 +98,8 @@ export NVM_DIR="$HOME/.nvm"
 if [[ `uname` == 'Darwin' ]]
 then
         export OSX=1
+        # iterm2 italic
+        export TERM=xterm-256color-italic
         # Brew analytics
         export HOMEBREW_NO_ANALYTICS=1
         # z

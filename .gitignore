@@ -1,3 +1,4 @@
+.DS_Store
 *.gpg
 random_seed
 .gpg-agent-info
