@@ -93,6 +93,8 @@ eval "$(rbenv init -)"
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
+# pyenv
+eval "$(pyenv init -)"
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -100,8 +102,11 @@ then
         export OSX=1
         # iterm2 italic
         export TERM=xterm-256color-italic
-        # Brew analytics
+        alias ssh="TERM=xterm-256color ssh"
+        # HomeBrew analytics, cask, path
         export HOMEBREW_NO_ANALYTICS=1
+        export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+        export PATH="/usr/local/sbin:$PATH"
         # z
         . `brew --prefix`/etc/profile.d/z.sh
         alias o='open'
