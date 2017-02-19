@@ -45,7 +45,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git brew lein npm osx pip virtualenvwrapper vi-mode)
+plugins=(git brew lein npm osx virtualenvwrapper vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -100,6 +100,9 @@ export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
 # pyenv
 eval "$(pyenv init -)"
+export PYTHON_CONFIGURE_OPTS="--enable-framework"
+# go
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
