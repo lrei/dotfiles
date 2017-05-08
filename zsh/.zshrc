@@ -45,7 +45,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git brew lein npm osx virtualenvwrapper vi-mode)
+plugins=(git brew lein npm osx vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -71,12 +71,10 @@ else
 fi
 
 # GPG agent
-if [ -f ~/.gnupg/.gpg-agent-info ] && [ -n "$(pgrep gpg-agent)" ]; then
-    source ~/.gnupg/.gpg-agent-info
-    export GPG_AGENT_INFO
-else
-    eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
-fi
+#if [ -n "$(pgrep gpg-agent)" ]; then
+#else
+#    eval $(gpg-agent --daemon)
+#fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -94,13 +92,14 @@ export TERM="xterm-256color"
 
 # Languages, libs
 # ruby: rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
 # pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-export PYTHON_CONFIGURE_OPTS="--enable-framework"
 # go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
@@ -118,6 +117,10 @@ then
         # z
         . `brew --prefix`/etc/profile.d/z.sh
         alias o='open'
+        # nvm
+        . "/usr/local/opt/nvm/nvm.sh"
+        # for pyenv
+        export PYTHON_CONFIGURE_OPTS="--enable-framework"
 else
         export OSX=
 fi
@@ -128,6 +131,10 @@ then
         export LINUX=1
         alias pbcopy='xsel --clipboard --input'
         alias pbpaste='xsel --clipboard --output'
+        # nvm
+        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        # pyenv
+        export PYTHON_CONFIGURE_OPTS="--enable-shared"
 else
         export LINUX=
 fi
