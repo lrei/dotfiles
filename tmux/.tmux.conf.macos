@@ -1,0 +1,95 @@
+###############################################################################
+# Basic Config
+###############################################################################
+
+# screen 256 color
+#set -g default-terminal "screen-256color"
+set -g default-terminal "xterm-256color"
+set -ga terminal-overrides ",*256col*:Tc"
+
+# history limit
+set -g history-limit 10000
+
+set-option -g status-position top
+set -g status-right "CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M "
+
+###############################################################################
+# Basic Key configuration
+###############################################################################
+# Setting the delay between prefix and command - Removes ESC delay
+set -sg escape-time 0
+set-option -g repeat-time 0
+
+# remap prefix to Control + space
+set -g prefix C-space
+
+# Free the original Ctrl-b prefix keybinding
+unbind C-b
+
+# vim keys
+set -g mode-keys vi
+
+# use the mouse
+setw -g mouse on
+
+# Reload tmux conf
+bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
+
+###############################################################################
+# Copy / Paste
+###############################################################################
+bind P paste-buffer
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+bind-key -t vi-copy 'r' rectangle-toggle
+
+set -g default-shell $SHELL
+set -g default-command "reattach-to-user-namespace -l ${SHELL}"
+
+###############################################################################
+# Windows & Panes
+###############################################################################
+
+# Bind space to last window
+bind Space last-window
+# splitting panes
+bind | split-window -h
+bind - split-window -v
+
+# Set the base index for windows to 1 instead of 0
+set -g base-index 1
+# Set the base index for panes to 1 instead of 0
+setw -g pane-base-index 1
+
+
+###############################################################################
+# Plugins
+###############################################################################
+set -g @plugin 'caiogondim/maglev'
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-sessionist'
+set -g @plugin 'tmux-plugins/tmux-pain-control'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-battery'
+set -g @plugin 'tmux-plugins/tmux-cpu'
+
+# ressurect
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-vim 'session'
+
+# continuum enabled
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '60'
+
+
+# install tpm if not already installed
+if "test ! -d ~/.tmux/plugins/tpm" \
+    "run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm'"
+
+
+run '~/.tmux/plugins/tpm/tpm'

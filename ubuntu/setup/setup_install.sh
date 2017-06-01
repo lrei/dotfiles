@@ -21,7 +21,9 @@ npm install -g standard
 npm install -g markdownlint
 
 # pyenv
-sudo apt-get install bzip2 libbz2-dev sqlite3 libsqlite3-dev
+sudo apt-get install -y  make build-essential libssl-dev zlib1g-dev libbz2-dev \
+libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+xz-utils tk-dev bzip2 libbz2-dev sqlite3 libsqlite3-dev libreadline7
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -47,11 +49,12 @@ rbenv rehash
 sudo apt-get install golang
 
 # vim
-sudo apt-get install build-essential cmake python-dev python3-dev
+sudo apt-get install -y build-essential cmake python-dev python3-dev vim-gtk \
+    xclip gnome-terminal sakura
 git clone git@github.com:lrei/vimfiles.git ~/.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
-cd ~/.vim/bundle/YouCompleteMe 
+cd ~/.vim/bundle/YouCompleteMe
 python install.py --clang-completer --tern-completer
 cd ~
 
@@ -60,5 +63,6 @@ sudo apt-get install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # python stuff
-sudo apt-get install libcupti-dev
-pip install numpy scipy scikit-learn pandas tensorflow-gpu ipython 
+sudo apt-get install -y libcupti-dev
+pip install numpy scipy scikit-learn pandas tensorflow-gpu ipython \
+    powerline-status

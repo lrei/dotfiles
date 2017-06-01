@@ -45,7 +45,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git brew lein npm osx vi-mode)
+plugins=(git zsh-dircolors-solarized lein npm osx vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -135,6 +135,7 @@ then
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
         # pyenv
         export PYTHON_CONFIGURE_OPTS="--enable-shared"
+
 else
         export LINUX=
 fi
@@ -151,6 +152,9 @@ fortune
 
 
 # ALIAS
+# tmux in 24bit color
+alias tmux="env TERM=xterm-256color tmux"
+
 # basic
 alias p='pbpaste'
 alias c='tr -d '\n' | pbcopy'
@@ -187,3 +191,4 @@ alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

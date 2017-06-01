@@ -5,7 +5,7 @@
 # screen 256 color
 #set -g default-terminal "screen-256color"
 set -g default-terminal "xterm-256color"
-se -ga terminal-overrides ",*256col*:Tc"
+set -ga terminal-overrides ",*256col*:Tc"
 
 # history limit
 set -g history-limit 10000
@@ -36,15 +36,18 @@ setw -g mouse on
 bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
 ###############################################################################
-# Copy / Paste 
+# Copy / Paste
 ###############################################################################
-bind P paste-buffer
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
-bind-key -t vi-copy 'r' rectangle-toggle
+# Linux
+bind -t vi-copy y copy-pipe "xclip -sel clip -i"
 
-set -g default-shell $SHELL 
-set -g default-command "reattach-to-user-namespace -l ${SHELL}"
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'r' rectangle-toggle
+#bind-key -t vi-copy C-y copy-pipe "xclip -i >/dev/null"
+
+bind P paste-buffer
+
+set -g default-shell $SHELL
 
 ###############################################################################
 # Windows & Panes
@@ -65,18 +68,21 @@ setw -g pane-base-index 1
 ###############################################################################
 # Plugins
 ###############################################################################
-set -g @plugin 'caiogondim/maglev'
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-sessionist'
-set -g @plugin 'tmux-plugins/tmux-pain-control'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-pain-control'
 set -g @plugin 'tmux-plugins/tmux-copycat'
-set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-sessionist'
 set -g @plugin 'tmux-plugins/tmux-battery'
+set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-cpu'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+#set -g @plugin 'seebi/tmux-colors-solarized'
+#set -g @colors-solarized 'dark'
+
 
 # ressurect
 set -g @resurrect-capture-pane-contents 'on'
@@ -93,3 +99,8 @@ if "test ! -d ~/.tmux/plugins/tpm" \
 
 
 run '~/.tmux/plugins/tpm/tpm'
+
+# powerline
+run-shell "powerline-daemon -q"
+source "/home/rei/.pyenv/versions/3.6.1/lib/python3.6/site-packages/powerline/bindings/tmux/powerline.conf"
+
