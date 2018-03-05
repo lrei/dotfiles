@@ -32,6 +32,11 @@ set -g mode-keys vi
 # use the mouse
 setw -g mouse on
 
+# set mouse on with prefix m
+bind m set -g mouse on
+# set mouse off with prefix M
+bind M set -g mouse off
+
 # Reload tmux conf
 bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
