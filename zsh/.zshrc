@@ -4,6 +4,9 @@ export ZSH=$HOME/.oh-my-zsh
 # Customizations
 ZSH_CUSTOM=$HOME/.zshcustom
 
+# noclobber is the dumbest most anoying thing ever
+setopt clobber
+
 # Theme
 ZSH_THEME="bullet-train"
 # - Spaceship
@@ -52,7 +55,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git lein npm osx vi-mode)
+plugins=(git zsh-dircolors-solarized lein npm osx vi-mode zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -140,6 +143,9 @@ fi
 if [[ `uname` == 'Linux' ]]
 then
         export LINUX=1
+        # ssh agent
+        eval "$(ssh-agent -s)"
+        # copy / paste
         alias pbcopy='xsel --clipboard --input'
         alias pbpaste='xsel --clipboard --output'
         # nvm
