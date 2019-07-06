@@ -9,22 +9,29 @@ ZSH_THEME="bullet-train"
 # - Spaceship
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
-# - BULLETTRAIN
+
+# - BULLETTRAIN - #
 BULLETTRAIN_PROMPT_SEPARATE_LINE=true
 BULLETTRAIN_PROMPT_ADD_NEWLIN=false
 BULLETTRAIN_TIME_SHOW=false             # shown in tmux theme
 BULLETTRAIN_CONTEXT_SHOW=true
-BULLETTRAIN_DIR_BG=black
-BULLETTRAIN_DIR_FG=default
+BULLETTRAIN_CONTEXT_BG=white
+BULLETTRAIN_CONTEXT_FG=black
+BULLETTRAIN_DIR_BG=white
+BULLETTRAIN_DIR_FG=black
 BULLETTRAIN_DIR_SHOW=true
 BULLETTRAIN_DIR_EXTENDED=2
+
+# NVM
 BULLETTRAIN_NVM_BG=yellow
 BULLETTRAIN_NVM_FG=black
-BULLETTRAIN_NVM_SHOW=true
-BULLETTRAIN_RUBY_SHOW=true
+
+BULLETTRAIN_RUBY_SHOW=false
+
 BULLETTRAIN_VIRTUALENV_BG=white
 BULLETTRAIN_VIRTUALENV_FG=black
 BULLETTRAIN_VIRTUALENV_SHOW=true
+# --------------------------------
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -45,7 +52,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git zsh-dircolors-solarized lein npm osx vi-mode)
+plugins=(git lein npm osx vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -97,9 +104,13 @@ eval "$(rbenv init -)"
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
 # pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+#export PYENV_ROOT="$HOME/.pyenv"
+#export PATH="$PYENV_ROOT/bin:$PATH"
+#eval "$(pyenv init -)"
+
+# Anaconda
+export PATH="$HOME/conda/bin:$PATH"
+
 # go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
@@ -192,3 +203,8 @@ alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# gnome vte for tilix
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+    source /etc/profile.d/vte.sh
+fi
