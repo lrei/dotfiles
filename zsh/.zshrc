@@ -17,27 +17,27 @@ SPACESHIP_PROMPT_SEPARATE_LINE=false
 BULLETTRAIN_PROMPT_SEPARATE_LINE=true
 BULLETTRAIN_PROMPT_ADD_NEWLIN=false
 BULLETTRAIN_TIME_SHOW=false             # shown in tmux theme
+# User / host
 BULLETTRAIN_CONTEXT_SHOW=true
 BULLETTRAIN_CONTEXT_BG=white
 BULLETTRAIN_CONTEXT_FG=black
+# DIR
 BULLETTRAIN_DIR_BG=white
 BULLETTRAIN_DIR_FG=black
 BULLETTRAIN_DIR_SHOW=true
 BULLETTRAIN_DIR_EXTENDED=2
-
 # NVM
+BULLETTRAIN_NVM_SHOW=true
 BULLETTRAIN_NVM_BG=yellow
 BULLETTRAIN_NVM_FG=black
-
+# BULLETTRAIN_NVM_PREFIX="⬡ "
+# RUBY
 BULLETTRAIN_RUBY_SHOW=false
-
-BULLETTRAIN_VIRTUALENV_BG=white
+# PYTHON
+BULLETTRAIN_VIRTUALENV_BG=green
 BULLETTRAIN_VIRTUALENV_FG=black
 BULLETTRAIN_VIRTUALENV_SHOW=true
 # --------------------------------
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
 export UPDATE_ZSH_DAYS=12
@@ -55,7 +55,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git zsh-dircolors-solarized lein npm osx vi-mode zsh-syntax-highlighting)
+plugins=(git lein npm osx vi-mode zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -73,49 +73,10 @@ zle -N zle-keymap-select
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
-
-# GPG agent
-#if [ -n "$(pgrep gpg-agent)" ]; then
-#else
-#    eval $(gpg-agent --daemon)
-#fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+export EDITOR='nvim'
 
 # if necessary, ensure terminal colors
 export TERM="xterm-256color"
-
-
-# Languages, libs
-# ruby: rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-# node: nvm
-export NVM_DIR="$HOME/.nvm"
-# pyenv
-#export PYENV_ROOT="$HOME/.pyenv"
-#export PATH="$PYENV_ROOT/bin:$PATH"
-#eval "$(pyenv init -)"
-
-# Anaconda
-export PATH="$HOME/conda/bin:$PATH"
-
-# go
-export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -131,10 +92,10 @@ then
         # z
         . `brew --prefix`/etc/profile.d/z.sh
         alias o='open'
-        # nvm
-        . "/usr/local/opt/nvm/nvm.sh"
+        # ls colors
+        alias ls='ls -G'
         # for pyenv
-        export PYTHON_CONFIGURE_OPTS="--enable-framework"
+        #export PYTHON_CONFIGURE_OPTS="--enable-framework"
 else
         export OSX=
 fi
@@ -148,21 +109,27 @@ then
         # copy / paste
         alias pbcopy='xsel --clipboard --input'
         alias pbpaste='xsel --clipboard --output'
-        # nvm
-        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-        # pyenv
-        export PYTHON_CONFIGURE_OPTS="--enable-shared"
+        # dircolors
+        eval 'dircolors ~/dotfiles/dircolors/dircolors.base16.dark'
 
 else
         export LINUX=
 fi
 
-
-# Machine Specific Configurations
-if [[ -a $HOME/.zshrc_resolution ]]
-then
-    source $HOME/.zshrc_resolution
-fi
+# Languages, libs
+#
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PYTHON_CONFIGURE_OPTS="--enable-shared"
+eval "$(pyenv init -)"
+# ruby: rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+# node: nvm
+export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Finally, show a fortune when we start the terminal
 fortune
@@ -171,6 +138,7 @@ fortune
 # ALIAS
 # tmux in 24bit color
 alias tmux="env TERM=xterm-256color tmux"
+alias vim="nvim"
 
 # basic
 alias p='pbpaste'
@@ -179,8 +147,8 @@ alias c='tr -d '\n' | pbcopy'
 # nix  common
 alias mkdir="mkdir -p"
 alias v="vim"
-alias ll='ls -la'
-alias lm='ls -alt | head -n 5'
+alias ll='ls -Gla'
+alias lm='ls -Galt | head -n 5'
 alias ps='ps aux'
 alias psg='ps aux | grep '
 
@@ -208,9 +176,3 @@ alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# gnome vte for tilix
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-    source /etc/profile.d/vte.sh
-fi
