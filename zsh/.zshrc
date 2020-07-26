@@ -109,8 +109,8 @@ then
         # copy / paste
         alias pbcopy='xsel --clipboard --input'
         alias pbpaste='xsel --clipboard --output'
-        # dircolors
-        eval 'dircolors ~/dotfiles/dircolors/dircolors.base16.dark'
+	# apps
+        export PATH="$HOME/apps:$PATH"
 
 else
         export LINUX=

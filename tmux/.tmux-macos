@@ -1,0 +1,13 @@
+set-option -as terminal-features ",st*:clipboard:cstyle:RGB:title:UTF-8"
+
+# renumber windows when one is deleted
+set-option -g renumber-windows on
+
+
+# set graphical window titles
+set-option -g set-titles on
+set-option -g set-titles-string "#{session_name} #{window_index}: #{pane_title}"
+
+set -g default-shell $SHELL
+# required for macos:
+set -g default-:qcommand "reattach-to-user-namespace -l ${SHELL}"
