@@ -176,3 +176,5 @@ alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
