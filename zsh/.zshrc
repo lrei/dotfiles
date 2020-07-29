@@ -109,7 +109,8 @@ then
         # copy / paste
         alias pbcopy='xsel --clipboard --input'
         alias pbpaste='xsel --clipboard --output'
-	# apps
+        # apps
+        if [ -e /home/rei/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rei/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
         export PATH="$HOME/apps:$PATH"
 
 else
