@@ -7,6 +7,11 @@ ZSH_CUSTOM=$HOME/.zshcustom
 # noclobber is the dumbest most anoying thing ever
 setopt clobber
 
+# Control history
+export HISTSIZE=500000
+export SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+
 # Theme
 ZSH_THEME="bullet-train"
 # - Spaceship
@@ -179,3 +184,5 @@ alias prp="pygmentize -O style=monokai -f console256 -l "
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source ~/.private_env.sh
