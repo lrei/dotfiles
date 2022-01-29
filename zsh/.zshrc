@@ -41,7 +41,7 @@ BULLETTRAIN_RUBY_SHOW=false
 # PYTHON
 BULLETTRAIN_VIRTUALENV_BG=green
 BULLETTRAIN_VIRTUALENV_FG=black
-BULLETTRAIN_VIRTUALENV_SHOW=true
+BULLETTRAIN_VIRTUALENV_SHOW=false
 # --------------------------------
 
 # Uncomment the following line to change how often to auto-update (in days).
@@ -60,7 +60,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git lein npm osx vi-mode zsh-syntax-highlighting)
+plugins=(git lein npm vi-mode zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -81,7 +81,7 @@ export LC_ALL=en_US.UTF-8
 export EDITOR='nvim'
 
 # if necessary, ensure terminal colors
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -99,8 +99,6 @@ then
         alias o='open'
         # ls colors
         alias ls='ls -G'
-        # for pyenv
-        #export PYTHON_CONFIGURE_OPTS="--enable-framework"
 else
         export OSX=
 fi
@@ -124,11 +122,6 @@ fi
 
 # Languages, libs
 #
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-export PYTHON_CONFIGURE_OPTS="--enable-shared"
-eval "$(pyenv init -)"
 # ruby: rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
@@ -136,6 +129,12 @@ eval "$(rbenv init -)"
 export NVM_DIR="$HOME/.nvm"
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# cuda
+export PATH="/usr/local/cuda-11.5/bin${PATH:+:${PATH}}"
+
+# conda
+# export PATH="~/miniconda3/bin:$PATH"  # commented out by conda initialize
 
 # Finally, show a fortune when we start the terminal
 fortune
@@ -186,3 +185,19 @@ alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l j
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source ~/.private_env.sh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/rei/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/rei/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/rei/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/rei/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
