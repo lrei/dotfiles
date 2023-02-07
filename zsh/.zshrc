@@ -41,7 +41,7 @@ BULLETTRAIN_RUBY_SHOW=false
 # PYTHON
 BULLETTRAIN_VIRTUALENV_BG=green
 BULLETTRAIN_VIRTUALENV_FG=black
-BULLETTRAIN_VIRTUALENV_SHOW=false
+BULLETTRAIN_VIRTUALENV_SHOW=true
 # --------------------------------
 
 # Uncomment the following line to change how often to auto-update (in days).
@@ -109,9 +109,15 @@ then
         export LINUX=1
         # ssh agent
         eval "$(ssh-agent -s)"
+        if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+          eval `ssh-agent`
+          ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+        fi
+        export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+        ssh-add -l > /dev/null || ssh-add
         # copy / paste
-        alias pbcopy='xsel --clipboard --input'
-        alias pbpaste='xsel --clipboard --output'
+        # alias pbcopy='xsel --clipboard --input'
+        # alias pbpaste='xsel --clipboard --output'
         # apps
         if [ -e /home/rei/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rei/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
         export PATH="$HOME/apps:$PATH"
@@ -131,7 +137,7 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # cuda
-export PATH="/usr/local/cuda-11.5/bin${PATH:+:${PATH}}"
+# export PATH="/usr/local/cuda-11.5/bin${PATH:+:${PATH}}"
 
 # conda
 # export PATH="~/miniconda3/bin:$PATH"  # commented out by conda initialize
@@ -184,20 +190,10 @@ alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l j
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source ~/.private_env.sh
+[ -f ~/.private_env.sh ] && source ~/.private_env.sh
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/rei/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/rei/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/rei/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/rei/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
+# PYTHON / PYENV
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
