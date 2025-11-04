@@ -65,7 +65,8 @@ SPACESHIP_PROMPT_ORDER=(
 # --------------------------------------- #
 setopt clobber               # noclobber is the dumbest most anoying thing ever
 setopt NO_BEEP               # no beep sound
-disable r                     # disable zsh's internal r command
+setopt NO_CORRECT            # no correct
+disable r                    # disable zsh's internal r command
 
 
 
@@ -209,20 +210,18 @@ alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
 
+# Dotfiles bare repo
+# `config` replaces `git`
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-
 . "$HOME/.local/bin/env"
-
 
 # Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-
 # Finally, show a fortune when we start the terminal
 # fortune
 
-# dotfiles bare repo
-alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
