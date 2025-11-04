@@ -1,8 +1,5 @@
 
 # ---- oh-my-zsh installation and config. ------
-# Requires:
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="spaceship"

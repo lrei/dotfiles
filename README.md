@@ -32,6 +32,11 @@ config status
 # Add and commit changes
 config add ~/.zshrc ~/.tmux.conf
 config commit -m "Update zsh + tmux config"
+# first time
+config push -u origin master
+# or do
+# git config --global push.autoSetupRemote true
+# after
 config push
 
 # Restore or discard changes
