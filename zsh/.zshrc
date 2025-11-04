@@ -1,77 +1,106 @@
-# Path to your oh-my-zsh installation.
+
+# ---- oh-my-zsh installation and config. ------
 export ZSH=$HOME/.oh-my-zsh
 
-# Customizations
+ZSH_THEME="spaceship"
+# Requires:
+# git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
+# ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+# git clone https://github.com/spaceship-prompt/spaceship-vi-mode.git $ZSH_CUSTOM/plugins/spaceship-vi-mode
+
 ZSH_CUSTOM=$HOME/.zshcustom
 
-# noclobber is the dumbest most anoying thing ever
-setopt clobber
+plugins=(
+  spaceship-vi-mode
+  vi-mode 
+  git 
+  zsh-syntax-highlighting 
+  aliases 
+  colored-man-pages 
+  colorize 
+  tmux 
+  z
+)
+# Requires:
+# git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# Control history
-export HISTSIZE=500000
-export SAVEHIST=$HISTSIZE
-setopt hist_ignore_all_dups
 
-# Theme
-ZSH_THEME="bullet-train"
-# - Spaceship
-SPACESHIP_PROMPT_ADD_NEWLINE=false
-SPACESHIP_PROMPT_SEPARATE_LINE=false
-
-# - BULLETTRAIN - #
-BULLETTRAIN_PROMPT_SEPARATE_LINE=true
-BULLETTRAIN_PROMPT_ADD_NEWLIN=false
-BULLETTRAIN_TIME_SHOW=false             # shown in tmux theme
-# User / host
-BULLETTRAIN_CONTEXT_SHOW=true
-BULLETTRAIN_CONTEXT_BG=white
-BULLETTRAIN_CONTEXT_FG=black
-# DIR
-BULLETTRAIN_DIR_BG=white
-BULLETTRAIN_DIR_FG=black
-BULLETTRAIN_DIR_SHOW=true
-BULLETTRAIN_DIR_EXTENDED=2
-# NVM
-BULLETTRAIN_NVM_SHOW=true
-BULLETTRAIN_NVM_BG=yellow
-BULLETTRAIN_NVM_FG=black
-# BULLETTRAIN_NVM_PREFIX="⬡ "
-# RUBY
-BULLETTRAIN_RUBY_SHOW=false
-# PYTHON
-BULLETTRAIN_VIRTUALENV_BG=green
-BULLETTRAIN_VIRTUALENV_FG=black
-BULLETTRAIN_VIRTUALENV_SHOW=true
-# --------------------------------
-
-# Uncomment the following line to change how often to auto-update (in days).
+# how often to auto-update (in days).
 export UPDATE_ZSH_DAYS=12
 
+# ------------------------------------------- #
+
+# #############################################
+#  -------------- SPACESHIP ----------------- # 
+# #############################################
+SPACESHIP_PROMPT_ASYNC=true
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
+SPACESHIP_TIME_SHOW=false
+SPACESHIP_DIR_TRUNC_REPO=false
+SPACESHIP_EXIT_CODE_SHOW=true
+SPACESHIP_PYTHON_SHOW=true
+SPACESHIP_NODE_SHOW=true
+SPACESHIP_GIT_SHOW=true
+SPACESHIP_UV_SHOW=true
+SPACESHIP_DIR_SHOW=true
+SPACESHIP_DIR_TRUNC_REPO=false
+
+
+# SPACESHIP_CHAR_SYMBOL="⚡"
+SPACESHIP_CHAR_SYMBOL_ROOT="#"
+SPACESHIP_PROMPT_ORDER=(
+  vi_mode
+  dir
+  node
+  python
+  uv
+  git
+  exit_code
+  char
+)
+
+
+# --------------------------------------- #
+setopt clobber               # noclobber is the dumbest most anoying thing ever
+setopt NO_BEEP               # no beep sound
+disable r                     # disable zsh's internal r command
+
+
+
+# #############################################
+#  -------------- COMPLETION ---------------- # 
+# #############################################
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' menu select
+
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
+# --------------------------------------- #
 
+
+# #############################################
+#  -------------- HISTORY ---------------- # 
+# #############################################
 HIST_STAMPS="yyyy-mm-dd"
-
-plugins=(git lein npm vi-mode zsh-syntax-highlighting)
-
-source $ZSH/oh-my-zsh.sh
-
-# VI MODE
-function zle-line-init zle-keymap-select {
-    BULLETTRAIN_CUSTOM_MSG="${${KEYMAP/vicmd/[N]}/(main|viins)/[I]}"
-    zle reset-prompt
-    zle -R
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
+# Avoid duplicates in history
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt SHARE_HISTORY
+bindkey '^R' history-incremental-search-backward
+# ------------------------------- 
 
 
 # Language (it's actually required e.g. for some python stuff)
@@ -107,6 +136,8 @@ fi
 if [[ `uname` == 'Linux' ]]
 then
         export LINUX=1
+        # tmux in 24bit color
+        alias tmux="env TERM=xterm-256color tmux"
         # ssh agent
         eval "$(ssh-agent -s)"
         if [ ! -S ~/.ssh/ssh_auth_sock ]; then
@@ -127,28 +158,18 @@ else
 fi
 
 # Languages, libs
-#
-# ruby: rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-# cuda
-# export PATH="/usr/local/cuda-11.5/bin${PATH:+:${PATH}}"
-
-# conda
-# export PATH="~/miniconda3/bin:$PATH"  # commented out by conda initialize
-
-# Finally, show a fortune when we start the terminal
-fortune
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
-# ALIAS
-# tmux in 24bit color
-alias tmux="env TERM=xterm-256color tmux"
+
+# #############################################
+#  -------------- ALIAS ---------------- # 
+# #############################################
 alias vim="nvim"
 
 # basic
@@ -188,12 +209,17 @@ alias prp="pygmentize -O style=monokai -f console256 -l "
 # Pretty print JSON line
 alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l json"
 
+
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[ -f ~/.private_env.sh ] && source ~/.private_env.sh
 
-# PYTHON / PYENV
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+. "$HOME/.local/bin/env"
+
+
+# Load Oh My Zsh
+source $ZSH/oh-my-zsh.sh
+
+
+# Finally, show a fortune when we start the terminal
+# fortune

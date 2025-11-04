@@ -1,7 +1,7 @@
 [user]
 	name = Luis Rei
 	email = me@luisrei.com
-	editor = vim
+	editor = nvim
 
 [merge]
     tool = vimdiff
@@ -12,7 +12,7 @@
 [core]
 	quotepath = false
 	pager = less -FRSX
-	excludesfile = ~/.cvsignore
+	excludesfile = /Users/rei/.gitignore_global
 	editor = vim
 	
 [color]
@@ -68,6 +68,7 @@
 	required = true
 
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
 	required = true
+	process = git-lfs filter-process
