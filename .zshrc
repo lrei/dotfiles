@@ -223,3 +223,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Finally, show a fortune when we start the terminal
 # fortune
+
+# dotfiles bare repo
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
