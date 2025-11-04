@@ -12,13 +12,14 @@ ZSH_CUSTOM=$HOME/.zshcustom
 
 plugins=(
   spaceship-vi-mode
-  vi-mode 
   git 
   zsh-syntax-highlighting 
   aliases 
   colored-man-pages 
   colorize 
   tmux 
+  fzf 
+  history-substring-search
   z
 )
 # Requires:
@@ -35,7 +36,12 @@ export UPDATE_ZSH_DAYS=12
 #  -------------- SPACESHIP ----------------- # 
 # #############################################
 SPACESHIP_PROMPT_ASYNC=true
+[[ -n "$TMUX" ]] && SPACESHIP_PROMPT_ASYNC=false
 SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_FIRST_PREFIX_SHOW=false
+SPACESHIP_RPROMPT_FIRST_PREFIX_SHOW=false
+SPACESHIP_RPROMPT_SHOW=false
+SPACESHIP_RPROMPT_ORDER=()
 SPACESHIP_PROMPT_SEPARATE_LINE=false
 SPACESHIP_TIME_SHOW=false
 SPACESHIP_DIR_TRUNC_REPO=false
@@ -63,11 +69,36 @@ SPACESHIP_PROMPT_ORDER=(
 
 
 # --------------------------------------- #
+
+# #############################################
+#  -------------- BASIC OPTS ---------------- # 
+# #############################################
 setopt clobber               # noclobber is the dumbest most anoying thing ever
 setopt NO_BEEP               # no beep sound
 setopt NO_CORRECT            # no correct
 disable r                    # disable zsh's internal r command
 
+# Clear screen only
+bindkey -M emacs '^X^G' clear-screen
+bindkey -M viins '^X^G' clear-screen
+bindkey -M vicmd '^X^G' clear-screen
+# --------------------------------------- #
+
+
+# #############################################
+#  -------------- TOOLS -------------------- # 
+# #############################################
+# Requires
+# brew install fzf
+#
+# portable fzf bindings
+# Key-bindings
+for f in \
+  "$HOME/.fzf/shell/key-bindings.zsh" \
+  "/usr/share/fzf/key-bindings.zsh" \
+  "/usr/local/share/fzf/key-bindings.zsh" \
+  "$(command -v brew >/dev/null 2>&1 && brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+do [[ -r "$f" ]] && source "$f" && break; done
 
 
 # #############################################
@@ -75,6 +106,13 @@ disable r                    # disable zsh's internal r command
 # #############################################
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu select
+
+for f in \
+  "$HOME/.fzf/shell/completion.zsh" \
+  "/usr/share/fzf/completion.zsh" \
+  "/usr/local/share/fzf/completion.zsh" \
+  "$(command -v brew >/dev/null 2>&1 && brew --prefix)/opt/fzf/shell/completion.zsh"
+do [[ -r "$f" ]] && source "$f" && break; done
 
 # Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
@@ -101,8 +139,19 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt SHARE_HISTORY
 bindkey '^R' history-incremental-search-backward
-# ------------------------------- 
 
+
+# fzf defaults
+# fzf UI
+export FZF_DEFAULT_OPTS='--height=30% --min-height=10 --layout=reverse --border --info=inline'
+export FZF_TMUX_HEIGHT='30%'
+export FZF_CTRL_R_OPTS='
+  --prompt="history> "
+  --preview-window=down,3,wrap,hidden
+  --bind=alt-p:toggle-preview,ctrl-/:toggle-preview
+'
+
+# ------------------------------- 
 
 # Language (it's actually required e.g. for some python stuff)
 export LANG=en_US.UTF-8
@@ -110,22 +159,18 @@ export LC_ALL=en_US.UTF-8
 
 export EDITOR='nvim'
 
-# if necessary, ensure terminal colors
-# export TERM="xterm-256color"
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
 then
         export OSX=1
         # iterm2 italic
-        export TERM=xterm-256color-italic
+        if [[ -z "$TMUX" ]]; then export TERM=xterm-256color-italic; fi
         alias ssh="TERM=xterm-256color ssh"
         # HomeBrew analytics, cask, path
         export HOMEBREW_NO_ANALYTICS=1
         export HOMEBREW_CASK_OPTS="--appdir=/Applications"
         export PATH="/usr/local/sbin:$PATH"
-        # z
-        . `brew --prefix`/etc/profile.d/z.sh
         alias o='open'
         # ls colors
         alias ls='ls -G'
@@ -137,8 +182,6 @@ fi
 if [[ `uname` == 'Linux' ]]
 then
         export LINUX=1
-        # tmux in 24bit color
-        alias tmux="env TERM=xterm-256color tmux"
         # ssh agent
         eval "$(ssh-agent -s)"
         if [ ! -S ~/.ssh/ssh_auth_sock ]; then
@@ -158,14 +201,15 @@ else
         export LINUX=
 fi
 
-# Languages, libs
+
+# #############################################
+#  -------------- Interpreters --------------- # 
+# #############################################
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+# (optional but nice) load nvm bash completion
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
 
 # #############################################
@@ -220,7 +264,30 @@ alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 . "$HOME/.local/bin/env"
 
 # Load Oh My Zsh
+DISABLE_AUTO_TITLE="true"
 source $ZSH/oh-my-zsh.sh
+
+# fixes for spaceship issues with RPOMPT and double lines in tmux
+if [[ -n "$TMUX" ]]; then
+  typeset -ga precmd_functions
+  precmd_functions=(${(@u)precmd_functions})
+  precmd_functions=(${precmd_functions:#omz_termsupport_precmd})
+  precmd_functions=(${precmd_functions:#omz_termsupport_cwd})
+fi
+# --- Kill the first RPROMPT inside tmux (runs once, after spaceship) ---
+fix_first_prompt_tmux() {
+  [[ -z "$TMUX" ]] && return       # only inside tmux
+  RPROMPT='' RPS1=''               # remove right-prompt so zsh doesn't reserve space
+  ZLE_RPROMPT_INDENT=0
+  unsetopt PROMPT_CR PROMPT_SP
+  PROMPT_EOL_MARK=''
+
+  # remove ourselves after the first run
+  precmd_functions=(${precmd_functions:#fix_first_prompt_tmux})
+}
+typeset -ga precmd_functions
+precmd_functions+=fix_first_prompt_tmux
+
 
 # Finally, show a fortune when we start the terminal
 # fortune
