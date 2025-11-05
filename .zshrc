@@ -215,15 +215,12 @@ export NVM_DIR="$HOME/.nvm"
 # #############################################
 #  -------------- ALIAS ---------------- # 
 # #############################################
-alias vim="nvim"
-
 # basic
 alias p='pbpaste'
 alias c='tr -d '\n' | pbcopy'
 
 # nix  common
 alias mkdir="mkdir -p"
-alias v="vim"
 alias ll='ls -Gla'
 alias lm='ls -Galt | head -n 5'
 alias ps='ps aux'
@@ -257,6 +254,10 @@ alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l j
 # Dotfiles bare repo
 # `config` replaces `git`
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+# Editor aliases
+alias v="nvim"
+alias n="nvim"
 # -------------------------------------------------------------------------  #
 
 # #############################################
@@ -267,6 +268,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export EDITOR='nvim'
+export VISUAL='nvim'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
