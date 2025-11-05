@@ -11,6 +11,7 @@ ZSH_THEME="spaceship"
 ZSH_CUSTOM=$HOME/.zshcustom
 
 plugins=(
+  vi-mode
   spaceship-vi-mode
   git 
   zsh-syntax-highlighting 
@@ -29,8 +30,8 @@ plugins=(
 
 # how often to auto-update (in days).
 export UPDATE_ZSH_DAYS=12
+# -------------------------------------------------------------------------  #
 
-# ------------------------------------------- #
 
 # #############################################
 #  -------------- SPACESHIP ----------------- # 
@@ -66,27 +67,31 @@ SPACESHIP_PROMPT_ORDER=(
   exit_code
   char
 )
+# -------------------------------------------------------------------------  #
 
 
-# --------------------------------------- #
 
 # #############################################
 #  -------------- BASIC OPTS ---------------- # 
 # #############################################
 setopt clobber               # noclobber is the dumbest most anoying thing ever
 setopt NO_BEEP               # no beep sound
-setopt NO_CORRECT            # no correct
 disable r                    # disable zsh's internal r command
+# no correct
+setopt NO_CORRECT
+ENABLE_CORRECTION="false"
+unsetopt correct correct_all
+
 
 # Clear screen only
 bindkey -M emacs '^X^G' clear-screen
 bindkey -M viins '^X^G' clear-screen
 bindkey -M vicmd '^X^G' clear-screen
-# --------------------------------------- #
+# -------------------------------------------------------------------------  #
 
 
 # #############################################
-#  -------------- TOOLS -------------------- # 
+#  -------------- INTERNAL TOOLS ------------ # 
 # #############################################
 # Requires
 # brew install fzf
@@ -99,6 +104,7 @@ for f in \
   "/usr/local/share/fzf/key-bindings.zsh" \
   "$(command -v brew >/dev/null 2>&1 && brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 do [[ -r "$f" ]] && source "$f" && break; done
+# -------------------------------------------------------------------------  #
 
 
 # #############################################
@@ -124,7 +130,7 @@ COMPLETION_WAITING_DOTS="true"
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-# --------------------------------------- #
+# -------------------------------------------------------------------------  #
 
 
 # #############################################
@@ -151,13 +157,7 @@ export FZF_CTRL_R_OPTS='
   --bind=alt-p:toggle-preview,ctrl-/:toggle-preview
 '
 
-# ------------------------------- 
-
-# Language (it's actually required e.g. for some python stuff)
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-export EDITOR='nvim'
+# -------------------------------------------------------------------------  #
 
 
 # OSX Specific
@@ -257,13 +257,29 @@ alias prpj="python -m json.tool | pygmentize -O style=monokai -f console256 -l j
 # Dotfiles bare repo
 # `config` replaces `git`
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+# -------------------------------------------------------------------------  #
+
+# #############################################
+#  -------------- Env & Tools --------------- # 
+# #############################################
+# Language (it's actually required e.g. for some python stuff)
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export EDITOR='nvim'
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 . "$HOME/.local/bin/env"
 
-# Load Oh My Zsh
+# -------------------------------------------------------------------------  #
+
+
+# #############################################
+#  -------------- OMZ LOAD --------------- # 
+# #############################################
+# -- Load Oh My Zsh
 DISABLE_AUTO_TITLE="true"
 source $ZSH/oh-my-zsh.sh
 
@@ -287,6 +303,11 @@ fix_first_prompt_tmux() {
 }
 typeset -ga precmd_functions
 precmd_functions+=fix_first_prompt_tmux
+
+# --- force-disable zsh command correction ---
+unsetopt correct
+unsetopt correct_all
+# -------------------------------------------------------------------------  #
 
 
 # Finally, show a fortune when we start the terminal
