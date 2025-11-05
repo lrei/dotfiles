@@ -4,16 +4,16 @@
 	editor = nvim
 
 [merge]
-    tool = vimdiff
+	tool = nvimdiff
 
 [diff]
-    tool = vimdiff
+	tool = nvimdiff
 
 [core]
 	quotepath = false
 	pager = less -FRSX
 	excludesfile = /Users/rei/.gitignore_global
-	editor = vim
+	editor = nvim
 	
 [color]
 	ui = auto
@@ -72,3 +72,14 @@
 	smudge = git-lfs smudge -- %f
 	required = true
 	process = git-lfs filter-process
+[sequence]
+	editor = nvim
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+[mergetool "nvimdiff"]
+	cmd = nvim -f -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true
+[mergetool]
+	prompt = false
