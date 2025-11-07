@@ -1,10 +1,17 @@
 # Run `ghostty +show-config --default --docs` to view a list of
 # all available config options and their default values.
+# ###################################################################
 
 font-family = IosevkaTerm Nerd Font
 font-size = 16
 theme = "iTerm2 Dark Background"
+macos-titlebar-style = tabs
+confirm-close-surface = false
 
+
+#####################################################################
+# Keybindings
+#####################################################################
 # wipe ALL defaults first
 keybind = clear
 

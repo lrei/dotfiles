@@ -143,7 +143,17 @@ SAVEHIST=10000
 HISTFILE=~/.zsh_history
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
-setopt SHARE_HISTORY
+
+# Lets make sure that history is not shared between multiple running shells.
+# prevent sharing history between running shells.
+unsetopt SHARE_HISTORY
+# stop shells from immediately writing commands to the shared file.
+unsetopt INC_APPEND_HISTORY
+unsetopt INC_APPEND_HISTORY_TIME
+# Shell append its history when it exits
+setopt APPEND_HISTORY
+
+# search
 bindkey '^R' history-incremental-search-backward
 
 
