@@ -169,6 +169,9 @@ export FZF_CTRL_R_OPTS='
 
 # -------------------------------------------------------------------------  #
 
+# #############################################
+#  -------------- OS SPECIFIC --------------- # 
+# #############################################
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -180,7 +183,6 @@ then
         # HomeBrew analytics, cask, path
         export HOMEBREW_NO_ANALYTICS=1
         export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-        export PATH="/usr/local/sbin:$PATH"
         alias o='open'
         # ls colors
         alias ls='ls -G'
@@ -204,28 +206,37 @@ then
         # alias pbcopy='xsel --clipboard --input'
         # alias pbpaste='xsel --clipboard --output'
         # apps
-        if [ -e /home/rei/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rei/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
         export PATH="$HOME/apps:$PATH"
 
 else
         export LINUX=
 fi
+# -------------------------------------------------------------------------  #
+
+# ###############################################
+#  -------------- HOST SPECIFIC --------------- # 
+# ###############################################
+
+HOST_SHORT="${HOST%%.*}"
+: "${HOST_SHORT:=$(hostname -s 2>/dev/null || print $HOST)}"
+case "$HOST_SHORT" in
+  shinigami)
+    ;;
+  erstation)
+    ;;
+esac
 
 
-# #############################################
+
+# ##############################################
 #  -------------- Interpreters --------------- # 
-# #############################################
+# ##############################################
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 # (optional but nice) load nvm bash completion
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
-
-# #############################################
-#  -------------- Common PATH --------------- # 
-# #############################################
-export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
 
 
@@ -290,7 +301,7 @@ export VISUAL='nvim'
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-. "$HOME/.local/bin/env"
+# . "$HOME/.local/bin/env"
 
 # -------------------------------------------------------------------------  #
 
