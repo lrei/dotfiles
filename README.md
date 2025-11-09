@@ -46,6 +46,23 @@ config restore -- ~/.zshrc
 config pull
 ```
 
+If there's an error like
+```
+config push
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin master
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+```
+
+just do:
+```bash
+config push -u origin master
+```
+
 ## Notes
 
 - The repo is bare and lives at ~/.cfg.
