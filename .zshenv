@@ -63,7 +63,7 @@ case "$HOST_SHORT" in
     HF_HOME="/data/hf"
     ;;
   erstation)
-    HF_HOME="/data/hf"
+    HF_HOME="/data2/hf"
     ;;
 esac
 
