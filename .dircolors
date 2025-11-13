@@ -1,0 +1,20 @@
+# Apply to all terminals
+TERM *
+
+# File type colors (mapped from your LS_COLORS)
+DIR                     01;36      # di - directories
+LINK                    35         # ln - symlinks
+SOCK                    32         # so - sockets
+PIPE                    33         # pi - named pipes
+EXEC                    31         # ex - executables
+BLK                     34;46      # bd - block devices
+CHR                     34;43      # cd - char devices
+SETUID                  30;41      # su - setuid
+SETGID                  30;46      # sg - setgid
+STICKY_OTHER_WRITABLE   30;42      # tw - sticky + other-writable
+OTHER_WRITABLE          30;43      # ow - other-writable (no sticky)
+
+# You can add more mappings later if you want, e.g.:
+# NORMAL 00
+# FILE   00
+

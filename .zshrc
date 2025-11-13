@@ -303,6 +303,7 @@ export VISUAL='nvim'
 
 # . "$HOME/.local/bin/env"
 
+
 # -------------------------------------------------------------------------  #
 
 
@@ -311,6 +312,7 @@ export VISUAL='nvim'
 # #############################################
 # -- Load Oh My Zsh
 DISABLE_AUTO_TITLE="true"
+DISABLE_LS_COLORS="true"
 source $ZSH/oh-my-zsh.sh
 
 # fixes for spaceship issues with RPOMPT and double lines in tmux
@@ -337,9 +339,21 @@ precmd_functions+=fix_first_prompt_tmux
 # --- force-disable zsh command correction ---
 unsetopt correct
 unsetopt correct_all
-# -------------------------------------------------------------------------  #
 
+# ---- LS COLORS ---
+case "$OSTYPE" in
+  linux*)
+    unset LS_COLORS
+    if command -v dircolors >/dev/null 2>&1; then
+      eval "$(dircolors -b ~/.dircolors 2>/dev/null || dircolors -b)"
+    else
+      export LS_COLORS='di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+    fi
+    alias ls='ls --color=auto'
+    ;;
+esac
+
+# -------------------------------------------------------------------------  #
 
 # Finally, show a fortune when we start the terminal
 # fortune
-
