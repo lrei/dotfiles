@@ -89,6 +89,15 @@ bindkey -M viins '^X^G' clear-screen
 bindkey -M vicmd '^X^G' clear-screen
 # -------------------------------------------------------------------------  #
 
+# #############################################
+# Autoload custom zsh functions
+# #############################################
+# Directory where function files live
+fpath=("$HOME/.zsh/functions" $fpath)
+
+# Enable autoloading of functions found in $fpath
+autoload -Uz $HOME/.zsh/functions/*(:t)
+# -------------------------------------------------------------------------  #
 
 # #############################################
 #  -------------- INTERNAL TOOLS ------------ # 
@@ -308,7 +317,6 @@ export VISUAL='nvim'
 
 # -------------------------------------------------------------------------  #
 
-
 # #############################################
 #  -------------- OMZ LOAD --------------- # 
 # #############################################
@@ -316,6 +324,14 @@ export VISUAL='nvim'
 DISABLE_AUTO_TITLE="true"
 DISABLE_LS_COLORS="true"
 source $ZSH/oh-my-zsh.sh
+
+
+# -------------------------------------------------------------------------  #
+
+
+# #############################################
+# spaceship fixes
+# #############################################
 
 # fixes for spaceship issues with RPOMPT and double lines in tmux
 if [[ -n "$TMUX" ]]; then

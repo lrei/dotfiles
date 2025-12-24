@@ -1,0 +1,21 @@
+# Claude wrapper with token auto-loading
+
+export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
+TOKEN_FILE="$HOME/.config/tokens/claude-zai"
+
+if [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
+  if [[ -f "$TOKEN_FILE" ]]; then
+    export ANTHROPIC_AUTH_TOKEN="$(<"$TOKEN_FILE")"
+  else
+    echo "Error: ANTHROPIC_AUTH_TOKEN is not set"
+    return 1
+  fi
+fi
+
+if [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
+  echo "Error: ANTHROPIC_AUTH_TOKEN is empty"
+  return 1
+fi
+
+command claude "$@"
+
