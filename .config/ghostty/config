@@ -5,6 +5,8 @@
 font-family = IosevkaTerm Nerd Font
 font-size = 16
 theme = "iTerm2 Dark Background"
+theme = "12-bit Rainbow"
+theme = "Apple System Colors"
 macos-titlebar-style = tabs
 confirm-close-surface = false
 

@@ -185,6 +185,8 @@ then
         export HOMEBREW_CASK_OPTS="--appdir=/Applications"
         alias o='open'
         # ls colors
+        export CLICOLOR=1
+        export LSCOLORS="gxBxhxDxfxhxhxhxhxcxcx"
         alias ls='ls -G'
 else
         export OSX=
