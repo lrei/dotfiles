@@ -297,6 +297,10 @@ alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # Editor aliases
 alias v="nvim"
 alias n="nvim"
+
+# Code assistants
+alias claude='claude --dangerously-skip-permissions'
+
 # -------------------------------------------------------------------------  #
 
 # #############################################
@@ -375,3 +379,9 @@ esac
 
 # Finally, show a fortune when we start the terminal
 # fortune
+
+# opencode
+export PATH=/home/rei/.opencode/bin:$PATH
+
+# Prevent AI assistants from adding Co-Authored-By lines to commits
+export CLAUDE_NO_COAUTHOR=true

@@ -17,5 +17,5 @@ if [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
   return 1
 fi
 
-command claude "$@"
+command claude --dangerously-skip-permissions "$@"
 
