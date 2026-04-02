@@ -14,7 +14,6 @@
 	pager = less -FRSX
 	excludesfile = /Users/rei/.gitignore_global
 	editor = nvim
-	hooksPath = /home/rei/.githooks
 	
 [color]
 	ui = auto
