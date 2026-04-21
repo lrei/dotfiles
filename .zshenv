@@ -89,3 +89,8 @@ export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-$HF_HOME/transformers}"
 export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
 mkdir -p "$HF_HUB_CACHE" "$TRANSFORMERS_CACHE" "$HF_DATASETS_CACHE"
 
+# -------------------------------------------------------------------------  #
+# opencode
+export PATH=/home/rei/.opencode/bin:$PATH
+
+# -------------------------------------------------------------------------  #

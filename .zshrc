@@ -375,13 +375,5 @@ case "$OSTYPE" in
     ;;
 esac
 
-# -------------------------------------------------------------------------  #
-
 # Finally, show a fortune when we start the terminal
 # fortune
-
-# opencode
-export PATH=/home/rei/.opencode/bin:$PATH
-
-# Prevent AI assistants from adding Co-Authored-By lines to commits
-export CLAUDE_NO_COAUTHOR=true
