@@ -1,4 +1,28 @@
 .DS_Store
+
+# GPG / encryption
 *.gpg
-random_seed
 .gpg-agent-info
+random_seed
+.gnupg/
+
+# SSH — exclude private keys + host state; public keys (.pub) stay trackable
+.ssh/id_*
+!.ssh/id_*.pub
+.ssh/known_hosts
+.ssh/authorized_keys
+
+# Credentials files / dirs
+.secrets
+.netrc
+.aws/
+.npmrc
+.pypirc
+
+# TLS / generic private keys
+*.pem
+*.key
+
+# env files containing secrets
+.env
+.envrc
