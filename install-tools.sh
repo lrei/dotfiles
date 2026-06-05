@@ -126,41 +126,9 @@ install_hf() {
 install_tmux() {
   log "tmux:"
   if have tmux; then
-    log "  already installed: $(tmux -V) at $(command -v tmux)"
-  elif [[ "$OS" == "macos" ]]; then
-    have brew || die "brew not found; install brew or tmux manually"
-    brew install tmux
+    log "  $(tmux -V) at $(command -v tmux)"
   else
-    # Linux — needs sudo. Tmux has no official curl|sh installer.
-    local installed=false
-    if have apt-get; then
-      log "  sudo apt-get install tmux"
-      sudo apt-get install -y tmux && installed=true
-    elif have dnf; then
-      log "  sudo dnf install tmux"
-      sudo dnf install -y tmux && installed=true
-    elif have pacman; then
-      log "  sudo pacman -S tmux"
-      sudo pacman -S --noconfirm tmux && installed=true
-    fi
-    have tmux || die "tmux install failed. Install manually with your package manager."
-  fi
-
-  # TPM (Tmux Plugin Manager) — required by .tmux.conf plugin declarations.
-  local tpm_dir="$HOME/.tmux/plugins/tpm"
-  if [[ ! -d "$tpm_dir" ]]; then
-    log "  installing TPM → $tpm_dir"
-    mkdir -p "$HOME/.tmux/plugins"
-    git clone --depth=1 https://github.com/tmux-plugins/tpm "$tpm_dir"
-  else
-    log "  TPM already installed"
-  fi
-
-  # Install all plugins declared in .tmux.conf (idempotent).
-  if [[ -x "$tpm_dir/bin/install_plugins" ]]; then
-    log "  installing tmux plugins via TPM"
-    "$tpm_dir/bin/install_plugins" >/dev/null 2>&1 || \
-      log "  (TPM plugin install emitted warnings; open tmux and press prefix + I if any are missing)"
+    log "  NOT FOUND — install via your package manager if needed (skipping)"
   fi
 }
 
