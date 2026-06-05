@@ -132,6 +132,24 @@ install_tmux() {
   fi
 }
 
+install_rg() {
+  log "ripgrep:"
+  local arch_rust os_rust
+  case "$ARCH" in
+    amd64) arch_rust=x86_64;;
+    arm64) arch_rust=aarch64;;
+  esac
+  case "$OS" in
+    linux) os_rust=unknown-linux-gnu;;
+    macos) os_rust=apple-darwin;;
+  esac
+  # Anchor on the trailing quote to exclude the .sha256 sidecar files.
+  fetch_gh_release "BurntSushi/ripgrep" "ripgrep-[0-9.]+-${arch_rust}-${os_rust}\.tar\.gz\""
+  log "  $REPO_TAG"
+  local top; top=$(ls -A "$EXTRACTED_DIR" | head -1)
+  install -m 0755 "$EXTRACTED_DIR/$top/rg" "$BINDIR/rg"
+}
+
 # --- Main ----------------------------------------------------------------
 have curl || die "curl not found"
 have tar  || die "tar not found"
@@ -139,6 +157,7 @@ have tar  || die "tar not found"
 install_fzf
 install_nvim
 install_gh
+install_rg
 install_uv
 install_bun
 install_hf
@@ -146,7 +165,7 @@ install_tmux
 
 log ""
 log "Installed:"
-for t in fzf nvim gh uv bun hf tmux; do
+for t in fzf nvim gh rg uv bun hf tmux; do
   if have "$t"; then
     case "$t" in
       tmux) v=$(tmux -V 2>&1 | head -1);;
