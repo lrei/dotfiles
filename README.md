@@ -23,6 +23,22 @@ config checkout
 config config --local status.showUntrackedFiles no
 ```
 
+### zsh setup
+
+```bash
+git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
+ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+git clone https://github.com/spaceship-prompt/spaceship-vi-mode.git $ZSH_CUSTOM/plugins/spaceship-vi-mode
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+Ensure fzf is installed:
+
+```bash
+brew install fzf
+```
+
 ## Usage
 
 ```bash
@@ -44,6 +60,23 @@ config restore -- ~/.zshrc
 
 # Pull latest changes (on other machines)
 config pull
+```
+
+If there's an error like
+```
+config push
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin master
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+```
+
+just do:
+```bash
+config push -u origin master
 ```
 
 ## Notes

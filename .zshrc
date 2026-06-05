@@ -89,6 +89,15 @@ bindkey -M viins '^X^G' clear-screen
 bindkey -M vicmd '^X^G' clear-screen
 # -------------------------------------------------------------------------  #
 
+# #############################################
+# Autoload custom zsh functions
+# #############################################
+# Directory where function files live
+fpath=("$HOME/.zsh/functions" $fpath)
+
+# Enable autoloading of functions found in $fpath
+autoload -Uz $HOME/.zsh/functions/*(:t)
+# -------------------------------------------------------------------------  #
 
 # #############################################
 #  -------------- INTERNAL TOOLS ------------ # 
@@ -143,7 +152,17 @@ SAVEHIST=10000
 HISTFILE=~/.zsh_history
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
-setopt SHARE_HISTORY
+
+# Lets make sure that history is not shared between multiple running shells.
+# prevent sharing history between running shells.
+unsetopt SHARE_HISTORY
+# stop shells from immediately writing commands to the shared file.
+unsetopt INC_APPEND_HISTORY
+unsetopt INC_APPEND_HISTORY_TIME
+# Shell append its history when it exits
+setopt APPEND_HISTORY
+
+# search
 bindkey '^R' history-incremental-search-backward
 
 
@@ -159,6 +178,9 @@ export FZF_CTRL_R_OPTS='
 
 # -------------------------------------------------------------------------  #
 
+# #############################################
+#  -------------- OS SPECIFIC --------------- # 
+# #############################################
 
 # OSX Specific
 if [[ `uname` == 'Darwin' ]]
@@ -170,9 +192,10 @@ then
         # HomeBrew analytics, cask, path
         export HOMEBREW_NO_ANALYTICS=1
         export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-        export PATH="/usr/local/sbin:$PATH"
         alias o='open'
         # ls colors
+        export CLICOLOR=1
+        export LSCOLORS="gxBxhxDxfxhxhxhxhxcxcx"
         alias ls='ls -G'
 else
         export OSX=
@@ -194,28 +217,37 @@ then
         # alias pbcopy='xsel --clipboard --input'
         # alias pbpaste='xsel --clipboard --output'
         # apps
-        if [ -e /home/rei/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rei/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
         export PATH="$HOME/apps:$PATH"
 
 else
         export LINUX=
 fi
+# -------------------------------------------------------------------------  #
+
+# ###############################################
+#  -------------- HOST SPECIFIC --------------- # 
+# ###############################################
+
+HOST_SHORT="${HOST%%.*}"
+: "${HOST_SHORT:=$(hostname -s 2>/dev/null || print $HOST)}"
+case "$HOST_SHORT" in
+  shinigami)
+    ;;
+  erstation)
+    ;;
+esac
 
 
-# #############################################
+
+# ##############################################
 #  -------------- Interpreters --------------- # 
-# #############################################
+# ##############################################
 # node: nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 # (optional but nice) load nvm bash completion
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
-
-# #############################################
-#  -------------- Common PATH --------------- # 
-# #############################################
-export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
 
 
@@ -265,6 +297,10 @@ alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # Editor aliases
 alias v="nvim"
 alias n="nvim"
+
+# Code assistants
+alias claude='claude --dangerously-skip-permissions'
+
 # -------------------------------------------------------------------------  #
 
 # #############################################
@@ -280,17 +316,26 @@ export VISUAL='nvim'
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-. "$HOME/.local/bin/env"
+# . "$HOME/.local/bin/env"
+
 
 # -------------------------------------------------------------------------  #
-
 
 # #############################################
 #  -------------- OMZ LOAD --------------- # 
 # #############################################
 # -- Load Oh My Zsh
 DISABLE_AUTO_TITLE="true"
+DISABLE_LS_COLORS="true"
 source $ZSH/oh-my-zsh.sh
+
+
+# -------------------------------------------------------------------------  #
+
+
+# #############################################
+# spaceship fixes
+# #############################################
 
 # fixes for spaceship issues with RPOMPT and double lines in tmux
 if [[ -n "$TMUX" ]]; then
@@ -316,9 +361,19 @@ precmd_functions+=fix_first_prompt_tmux
 # --- force-disable zsh command correction ---
 unsetopt correct
 unsetopt correct_all
-# -------------------------------------------------------------------------  #
 
+# ---- LS COLORS ---
+case "$OSTYPE" in
+  linux*)
+    unset LS_COLORS
+    if command -v dircolors >/dev/null 2>&1; then
+      eval "$(dircolors -b ~/.dircolors 2>/dev/null || dircolors -b)"
+    else
+      export LS_COLORS='di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+    fi
+    alias ls='ls --color=auto'
+    ;;
+esac
 
 # Finally, show a fortune when we start the terminal
 # fortune
-

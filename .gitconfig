@@ -12,7 +12,7 @@
 [core]
 	quotepath = false
 	pager = less -FRSX
-	excludesfile = /Users/rei/.gitignore_global
+	excludesfile = /home/rei/.gitignore_global
 	editor = nvim
 	
 [color]
