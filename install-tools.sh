@@ -134,17 +134,17 @@ install_tmux() {
 
 install_rg() {
   log "ripgrep:"
-  local arch_rust os_rust
-  case "$ARCH" in
-    amd64) arch_rust=x86_64;;
-    arm64) arch_rust=aarch64;;
-  esac
-  case "$OS" in
-    linux) os_rust=unknown-linux-gnu;;
-    macos) os_rust=apple-darwin;;
+  # Ripgrep ships different target triples per (os, arch) — musl on linux x86_64,
+  # gnu on linux aarch64. Map explicitly.
+  local target
+  case "$OS-$ARCH" in
+    linux-amd64) target=x86_64-unknown-linux-musl;;
+    linux-arm64) target=aarch64-unknown-linux-gnu;;
+    macos-amd64) target=x86_64-apple-darwin;;
+    macos-arm64) target=aarch64-apple-darwin;;
   esac
   # Anchor on the trailing quote to exclude the .sha256 sidecar files.
-  fetch_gh_release "BurntSushi/ripgrep" "ripgrep-[0-9.]+-${arch_rust}-${os_rust}\.tar\.gz\""
+  fetch_gh_release "BurntSushi/ripgrep" "ripgrep-[0-9.]+-${target}\.tar\.gz\""
   log "  $REPO_TAG"
   local top; top=$(ls -A "$EXTRACTED_DIR" | head -1)
   install -m 0755 "$EXTRACTED_DIR/$top/rg" "$BINDIR/rg"
