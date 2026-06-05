@@ -60,6 +60,50 @@ fetch_gh_release() {
   fi
 }
 
+# --- System deps (one sudo prompt for everything apt/brew needs) ---------
+install_system_deps() {
+  if [[ "$OS" == "macos" ]]; then
+    have brew || die "brew not found; install from https://brew.sh"
+    local brew_pkgs=()
+    have tmux || brew_pkgs+=(tmux)
+    # python3 venv ships with brew's python3 by default
+    if [[ ${#brew_pkgs[@]} -gt 0 ]]; then
+      log "brew install: ${brew_pkgs[*]}"
+      brew install "${brew_pkgs[@]}"
+    fi
+    return
+  fi
+
+  # Linux — prefer apt, fall back to dnf/pacman
+  local pm pkgs=()
+  if have apt-get; then
+    pm="apt-get"
+    have tmux || pkgs+=(tmux)
+    # Ubuntu ships python3 without venv/ensurepip; detect and install the
+    # versioned python3.X-venv package.
+    if have python3 && ! python3 -c "import ensurepip" >/dev/null 2>&1; then
+      pkgs+=("$(python3 -c 'print(f"python3.{__import__("sys").version_info.minor}-venv")')")
+    fi
+    [[ ${#pkgs[@]} -gt 0 ]] || return 0
+    log "sudo $pm install: ${pkgs[*]}"
+    sudo apt-get install -y "${pkgs[@]}"
+  elif have dnf; then
+    pm="dnf"
+    have tmux || pkgs+=(tmux)
+    have python3 || pkgs+=(python3)
+    [[ ${#pkgs[@]} -gt 0 ]] || return 0
+    log "sudo $pm install: ${pkgs[*]}"
+    sudo dnf install -y "${pkgs[@]}"
+  elif have pacman; then
+    pm="pacman"
+    have tmux || pkgs+=(tmux)
+    have python3 || pkgs+=(python)
+    [[ ${#pkgs[@]} -gt 0 ]] || return 0
+    log "sudo $pm -S: ${pkgs[*]}"
+    sudo pacman -S --noconfirm "${pkgs[@]}"
+  fi
+}
+
 # --- Per-tool installers -------------------------------------------------
 
 install_fzf() {
@@ -127,20 +171,9 @@ install_tmux() {
   log "tmux:"
   if have tmux; then
     log "  already installed: $(tmux -V) at $(command -v tmux)"
-  elif [[ "$OS" == "macos" ]]; then
-    have brew || die "brew not found; install brew or tmux manually"
-    brew install tmux
   else
-    # Linux: try common package managers. sudo will prompt for password.
-    if have apt-get; then
-      sudo apt-get install -y tmux
-    elif have dnf; then
-      sudo dnf install -y tmux
-    elif have pacman; then
-      sudo pacman -S --noconfirm tmux
-    else
-      die "tmux not found and no supported package manager (apt/dnf/pacman). Install manually."
-    fi
+    # Should already be installed by install_system_deps; if not, bail loudly.
+    die "tmux still missing — install_system_deps should have caught this. Install manually."
   fi
 
   # TPM (Tmux Plugin Manager) — required by .tmux.conf plugin declarations.
@@ -164,6 +197,8 @@ install_tmux() {
 # --- Main ----------------------------------------------------------------
 have curl || die "curl not found"
 have tar  || die "tar not found"
+
+install_system_deps
 
 install_fzf
 install_nvim
