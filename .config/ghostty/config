@@ -65,10 +65,10 @@ keybind = super+v=paste_from_clipboard
 keybind = super+a=select_all
 
 # --- Scrolling  ---
-keybind = page_up=scroll_page_up
-keybind = page_down=scroll_page_down
-keybind = home=scroll_to_top
-keybind = end=scroll_to_bottom
+#keybind = page_up=scroll_page_up
+#keybind = page_down=scroll_page_down
+#keybind = home=scroll_to_top
+#keybind = end=scroll_to_bottom
 
 
         
