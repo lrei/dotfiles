@@ -14,6 +14,8 @@
 typeset -ga PATH_ADD=(
   "$HOME/.local/bin"   # user-installed tools (pip --user, cargo, etc.)
   "$HOME/bin"          # personal scripts
+  "$HOME/apps"         # personal apps
+  "$HOME/.opencode/bin" # opencode
   "/usr/local/bin"     # macOS (Intel) Homebrew
   "/usr/local/sbin"     # macOS (Intel) Homebrew
 )
@@ -88,9 +90,5 @@ export HF_HUB_CACHE="${HF_HUB_CACHE:-$HF_HOME/hub}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-$HF_HOME/transformers}"
 export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
 mkdir -p "$HF_HUB_CACHE" "$TRANSFORMERS_CACHE" "$HF_DATASETS_CACHE"
-
-# -------------------------------------------------------------------------  #
-# opencode
-export PATH=/home/rei/.opencode/bin:$PATH
 
 # -------------------------------------------------------------------------  #

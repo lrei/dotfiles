@@ -216,9 +216,6 @@ then
         # copy / paste
         # alias pbcopy='xsel --clipboard --input'
         # alias pbpaste='xsel --clipboard --output'
-        # apps
-        export PATH="$HOME/apps:$PATH"
-
 else
         export LINUX=
 fi
