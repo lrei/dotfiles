@@ -86,21 +86,24 @@ install_system_deps() {
     fi
     [[ ${#pkgs[@]} -gt 0 ]] || return 0
     log "sudo $pm install: ${pkgs[*]}"
-    sudo apt-get install -y "${pkgs[@]}"
+    sudo apt-get install -y "${pkgs[@]}" || \
+      log "WARNING: sudo failed (no TTY? cancelled?). Run manually: sudo apt-get install -y ${pkgs[*]}. Continuing — some tools (hf) may fail."
   elif have dnf; then
     pm="dnf"
     have tmux || pkgs+=(tmux)
     have python3 || pkgs+=(python3)
     [[ ${#pkgs[@]} -gt 0 ]] || return 0
     log "sudo $pm install: ${pkgs[*]}"
-    sudo dnf install -y "${pkgs[@]}"
+    sudo dnf install -y "${pkgs[@]}" || \
+      log "WARNING: sudo failed. Run manually: sudo dnf install -y ${pkgs[*]}"
   elif have pacman; then
     pm="pacman"
     have tmux || pkgs+=(tmux)
     have python3 || pkgs+=(python)
     [[ ${#pkgs[@]} -gt 0 ]] || return 0
     log "sudo $pm -S: ${pkgs[*]}"
-    sudo pacman -S --noconfirm "${pkgs[@]}"
+    sudo pacman -S --noconfirm "${pkgs[@]}" || \
+      log "WARNING: sudo failed. Run manually: sudo pacman -S --noconfirm ${pkgs[*]}"
   fi
 }
 
