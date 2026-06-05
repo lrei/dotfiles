@@ -3,29 +3,49 @@
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="spaceship"
-# Requires:
-# git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
-# ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-# git clone https://github.com/spaceship-prompt/spaceship-vi-mode.git $ZSH_CUSTOM/plugins/spaceship-vi-mode
+# Custom plugins/themes below are auto-installed by _ensure_omz_custom.
 
 ZSH_CUSTOM=$HOME/.zshcustom
 
 plugins=(
   vi-mode
   spaceship-vi-mode
-  git 
-  zsh-syntax-highlighting 
-  aliases 
-  colored-man-pages 
-  colorize 
-  tmux 
-  fzf 
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  aliases
+  colored-man-pages
+  colorize
+  tmux
+  fzf
   history-substring-search
   z
 )
-# Requires:
-# git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-# git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Auto-install custom oh-my-zsh plugins/themes on first launch. Idempotent.
+typeset -A _OMZ_CUSTOM_SOURCES=(
+  spaceship-vi-mode       spaceship-prompt/spaceship-vi-mode
+  zsh-syntax-highlighting zsh-users/zsh-syntax-highlighting
+  zsh-autosuggestions     zsh-users/zsh-autosuggestions
+)
+_ensure_omz_custom() {
+  emulate -L zsh
+  local name repo target
+  for name repo in "${(@kv)_OMZ_CUSTOM_SOURCES}"; do
+    target="$ZSH_CUSTOM/plugins/$name"
+    [[ -d "$target" ]] && continue
+    git clone --depth=1 "https://github.com/$repo" "$target" 2>/dev/null \
+      || print "[dotfiles] failed to clone plugin: $name" >&2
+  done
+  if [[ ! -d "$ZSH_CUSTOM/themes/spaceship-prompt" ]]; then
+    git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt \
+      "$ZSH_CUSTOM/themes/spaceship-prompt" 2>/dev/null \
+      || print "[dotfiles] failed to clone spaceship theme" >&2
+    ln -sf "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" \
+           "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+  fi
+}
+_ensure_omz_custom
 
 
 # how often to auto-update (in days).
@@ -205,14 +225,17 @@ fi
 if [[ `uname` == 'Linux' ]]
 then
         export LINUX=1
-        # ssh agent
-        eval "$(ssh-agent -s)"
-        if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-          eval `ssh-agent`
-          ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-        fi
-        export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-        ssh-add -l > /dev/null || ssh-add
+        # ssh agent — single persistent agent bound to a fixed socket
+        export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+        ssh-add -l >/dev/null 2>&1
+        case $? in
+          0|1) ;;  # agent reachable (0 = keys loaded, 1 = no keys yet)
+          2)       # cannot connect → spawn one bound to this exact socket
+            rm -f "$SSH_AUTH_SOCK"
+            eval "$(ssh-agent -a "$SSH_AUTH_SOCK" -s)" >/dev/null
+            ssh-add 2>/dev/null
+            ;;
+        esac
         # copy / paste
         # alias pbcopy='xsel --clipboard --input'
         # alias pbpaste='xsel --clipboard --output'
