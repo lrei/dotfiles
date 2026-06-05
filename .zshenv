@@ -55,40 +55,16 @@ export PATH
 
 
 # #############################################
-#  -------------- OS SPECIFIC --------------- # 
+#  -------------- HUGGINGFACE --------------- # 
 # #############################################
-
-# OSX Specific
-if [[ `uname` == 'Darwin' ]]
-then
-    HF_HOME="$HOME/dev/hf"
-fi
-
-
-
-# ###############################################
-#  -------------- HOST SPECIFIC --------------- # 
-# ###############################################
-
-HOST_SHORT="${HOST%%.*}"
-: "${HOST_SHORT:=$(hostname -s 2>/dev/null || print $HOST)}"
-case "$HOST_SHORT" in
-  shinigami)
-    HF_HOME="/data/hf"
-    ;;
-  erstation)
-    HF_HOME="/data2/hf"
-    ;;
-  multivac)
-    HF_HOME="$HOME/dev/hf"
-    ;;
-esac
-
-# Set huggingface paths
+# HF_HOME alone is sufficient — HF_HUB_CACHE / TRANSFORMERS_CACHE /
+# HF_DATASETS_CACHE all derive from it automatically (huggingface_hub >= 0.14).
+# Per-host override (e.g. /data/hf on a machine with a big disk):
+#   create ~/.config/hf.env containing:  HF_HOME=/data/hf
+# (~/.config/hf.env is not tracked by the dotfiles repo.)
+: "${HF_HOME:=$HOME/dev/hf}"
+[[ -r ~/.config/hf.env ]] && source ~/.config/hf.env
 export HF_HOME
-export HF_HUB_CACHE="${HF_HUB_CACHE:-$HF_HOME/hub}"
-export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-$HF_HOME/transformers}"
-export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$HF_HOME/datasets}"
-mkdir -p "$HF_HUB_CACHE" "$TRANSFORMERS_CACHE" "$HF_DATASETS_CACHE"
+[[ -d "$HF_HOME" ]] || mkdir -p "$HF_HOME" 2>/dev/null
 
 # -------------------------------------------------------------------------  #
