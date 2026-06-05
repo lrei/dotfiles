@@ -23,6 +23,7 @@ have curl || die "curl not found. Install with: brew install curl (macOS)  |  ap
 if [[ -d "$CFG_DIR" ]]; then
   log "Refreshing $CFG_DIR..."
   config fetch origin
+  config reset --hard "origin/$(config symbolic-ref --short HEAD)"
 else
   log "Cloning bare repo to $CFG_DIR..."
   git clone --bare "$REPO_URL" "$CFG_DIR"
