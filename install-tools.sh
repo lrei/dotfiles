@@ -60,53 +60,6 @@ fetch_gh_release() {
   fi
 }
 
-# --- System deps (one sudo prompt for everything apt/brew needs) ---------
-install_system_deps() {
-  if [[ "$OS" == "macos" ]]; then
-    have brew || die "brew not found; install from https://brew.sh"
-    local brew_pkgs=()
-    have tmux || brew_pkgs+=(tmux)
-    # python3 venv ships with brew's python3 by default
-    if [[ ${#brew_pkgs[@]} -gt 0 ]]; then
-      log "brew install: ${brew_pkgs[*]}"
-      brew install "${brew_pkgs[@]}"
-    fi
-    return
-  fi
-
-  # Linux — prefer apt, fall back to dnf/pacman
-  local pm pkgs=()
-  if have apt-get; then
-    pm="apt-get"
-    have tmux || pkgs+=(tmux)
-    # Ubuntu ships python3 without venv/ensurepip; detect and install the
-    # versioned python3.X-venv package.
-    if have python3 && ! python3 -c "import ensurepip" >/dev/null 2>&1; then
-      pkgs+=("$(python3 -c 'print(f"python3.{__import__("sys").version_info.minor}-venv")')")
-    fi
-    [[ ${#pkgs[@]} -gt 0 ]] || return 0
-    log "sudo $pm install: ${pkgs[*]}"
-    sudo apt-get install -y "${pkgs[@]}" || \
-      log "WARNING: sudo failed (no TTY? cancelled?). Run manually: sudo apt-get install -y ${pkgs[*]}. Continuing — some tools (hf) may fail."
-  elif have dnf; then
-    pm="dnf"
-    have tmux || pkgs+=(tmux)
-    have python3 || pkgs+=(python3)
-    [[ ${#pkgs[@]} -gt 0 ]] || return 0
-    log "sudo $pm install: ${pkgs[*]}"
-    sudo dnf install -y "${pkgs[@]}" || \
-      log "WARNING: sudo failed. Run manually: sudo dnf install -y ${pkgs[*]}"
-  elif have pacman; then
-    pm="pacman"
-    have tmux || pkgs+=(tmux)
-    have python3 || pkgs+=(python)
-    [[ ${#pkgs[@]} -gt 0 ]] || return 0
-    log "sudo $pm -S: ${pkgs[*]}"
-    sudo pacman -S --noconfirm "${pkgs[@]}" || \
-      log "WARNING: sudo failed. Run manually: sudo pacman -S --noconfirm ${pkgs[*]}"
-  fi
-}
-
 # --- Per-tool installers -------------------------------------------------
 
 install_fzf() {
@@ -174,9 +127,23 @@ install_tmux() {
   log "tmux:"
   if have tmux; then
     log "  already installed: $(tmux -V) at $(command -v tmux)"
+  elif [[ "$OS" == "macos" ]]; then
+    have brew || die "brew not found; install brew or tmux manually"
+    brew install tmux
   else
-    # Should already be installed by install_system_deps; if not, bail loudly.
-    die "tmux still missing — install_system_deps should have caught this. Install manually."
+    # Linux — needs sudo. Tmux has no official curl|sh installer.
+    local installed=false
+    if have apt-get; then
+      log "  sudo apt-get install tmux"
+      sudo apt-get install -y tmux && installed=true
+    elif have dnf; then
+      log "  sudo dnf install tmux"
+      sudo dnf install -y tmux && installed=true
+    elif have pacman; then
+      log "  sudo pacman -S tmux"
+      sudo pacman -S --noconfirm tmux && installed=true
+    fi
+    have tmux || die "tmux install failed. Install manually with your package manager."
   fi
 
   # TPM (Tmux Plugin Manager) — required by .tmux.conf plugin declarations.
@@ -201,8 +168,6 @@ install_tmux() {
 have curl || die "curl not found"
 have tar  || die "tar not found"
 
-install_system_deps
-
 install_fzf
 install_nvim
 install_gh
@@ -215,7 +180,10 @@ log ""
 log "Installed:"
 for t in fzf nvim gh uv bun hf tmux; do
   if have "$t"; then
-    v=$("$t" --version 2>&1 | head -1)
+    case "$t" in
+      tmux) v=$(tmux -V 2>&1 | head -1);;
+      *)    v=$("$t" --version 2>&1 | head -1);;
+    esac
     printf '  %-8s %s (%s)\n' "$t" "$v" "$(command -v "$t")"
   else
     printf '  %-8s NOT FOUND\n' "$t"
