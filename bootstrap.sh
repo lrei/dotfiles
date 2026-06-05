@@ -22,8 +22,8 @@ have curl || die "curl not found. Install with: brew install curl (macOS)  |  ap
 # 2. Acquire / refresh dotfiles
 if [[ -d "$CFG_DIR" ]]; then
   log "Refreshing $CFG_DIR..."
-  config fetch origin
-  config reset --hard "origin/$(config symbolic-ref --short HEAD)"
+  config fetch origin master
+  config reset --hard FETCH_HEAD
 else
   log "Cloning bare repo to $CFG_DIR..."
   git clone --bare "$REPO_URL" "$CFG_DIR"
