@@ -46,9 +46,14 @@ fetch_gh_release() {
 
   EXTRACTED_DIR=$(mktemp -d)
   if [[ "$url" == *.zip ]]; then
-    have unzip || die "unzip required for $REPO_OWNER_NAME release (macOS gh)"
     curl -fsSL "$url" -o "$EXTRACTED_DIR/a.zip"
-    unzip -q "$EXTRACTED_DIR/a.zip" -d "$EXTRACTED_DIR"
+    if have unzip; then
+      unzip -q "$EXTRACTED_DIR/a.zip" -d "$EXTRACTED_DIR"
+    elif have python3; then
+      python3 -m zipfile -e "$EXTRACTED_DIR/a.zip" "$EXTRACTED_DIR/"
+    else
+      die "Need unzip or python3 to extract $REPO_OWNER_NAME release"
+    fi
     rm -f "$EXTRACTED_DIR/a.zip"
   else
     curl -fsSL "$url" | tar -xz -C "$EXTRACTED_DIR"
@@ -92,15 +97,21 @@ install_uv() {
 }
 
 install_bun() {
-  log "bun: official installer"
-  # Bun's installer appends to ~/.zshrc; back it up and restore — we symlink
-  # ~/.bun/bin/bun into $BINDIR instead, so the PATH modification isn't needed.
-  local rc_backup; rc_backup=$(mktemp)
-  cp ~/.zshrc "$rc_backup" 2>/dev/null || true
-  BUN_INSTALL="$HOME/.bun" curl -fsSL https://bun.sh/install | bash
-  cp "$rc_backup" ~/.zshrc 2>/dev/null || true
-  rm -f "$rc_backup"
-  ln -sf "$HOME/.bun/bin/bun" "$BINDIR/bun"
+  log "bun:"
+  # Direct GitHub release download (the official installer hard-requires unzip;
+  # we use the same fetch_gh_release that falls back to python3 -m zipfile).
+  local bun_os=$OS bun_arch=$ARCH
+  [[ "$OS" == "macos" ]] && bun_os=darwin
+  case "$ARCH" in
+    amd64) bun_arch=x64;;
+    arm64) bun_arch=aarch64;;
+  esac
+  fetch_gh_release "oven-sh/bun" "bun-${bun_os}-${bun_arch}\.zip"
+  log "  $REPO_TAG"
+  local bun_dir="$HOME/.bun"
+  mkdir -p "$bun_dir/bin"
+  install -m 0755 "$EXTRACTED_DIR/bun-${bun_os}-${bun_arch}/bun" "$bun_dir/bin/bun"
+  ln -sf "$bun_dir/bin/bun" "$BINDIR/bun"
 }
 
 install_hf() {
