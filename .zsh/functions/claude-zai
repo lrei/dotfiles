@@ -1,7 +1,7 @@
 # Claude wrapper with token auto-loading
 
 (
-  local token_file="$HOME/.config/tokens/claude-zai"
+  local token_file="$HOME/.config/.secrets/zai"
   local token
 
   if [[ -f "$token_file" ]]; then
