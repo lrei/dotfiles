@@ -36,11 +36,13 @@ fetch_gh_release() {
   REPO_OWNER_NAME=$1
   ASSET_REGEX=$2
   local api url
-  api=$(curl -fsSL "https://api.github.com/repos/$REPO_OWNER_NAME/releases/latest")
+  api=$(curl -fsSL "https://api.github.com/repos/$REPO_OWNER_NAME/releases/latest") \
+    || die "Failed to fetch latest release for $REPO_OWNER_NAME"
+  REPO_TAG=$(printf '%s\n' "$api" | grep '"tag_name"' | head -1 | cut -d'"' -f4 || true)
   url=$(printf '%s\n' "$api" | grep '"browser_download_url"' \
-        | grep -E "$ASSET_REGEX" | head -1 | cut -d'"' -f4)
-  REPO_TAG=$(printf '%s\n' "$api" | grep '"tag_name"' | head -1 | cut -d'"' -f4)
-  [[ -n "$url" ]] || die "No asset matching '$ASSET_REGEX' in $REPO_OWNER_NAME latest release"
+        | grep -E "$ASSET_REGEX" | head -1 | cut -d'"' -f4 || true)
+  [[ -n "$url" ]] || die "No asset matching '$ASSET_REGEX' in $REPO_OWNER_NAME latest ($REPO_TAG). Available:" \
+                        $(printf '%s\n' "$api" | grep '"browser_download_url"' | cut -d'"' -f4)
 
   EXTRACTED_DIR=$(mktemp -d)
   if [[ "$url" == *.zip ]]; then
@@ -57,7 +59,7 @@ fetch_gh_release() {
 
 install_fzf() {
   log "fzf:"
-  fetch_gh_release "junegunn/fzf" "fzf-[0-9.]+-${OS}_${ARCH}\.tar\.gz$"
+  fetch_gh_release "junegunn/fzf" "fzf-[0-9.]+-${OS}_${ARCH}\.tar\.gz"
   log "  $REPO_TAG"
   install -m 0755 "$EXTRACTED_DIR/fzf" "$BINDIR/fzf"
 }
@@ -66,9 +68,8 @@ install_nvim() {
   log "neovim:"
   local arch_native=$ARCH
   [[ "$ARCH" == "amd64" ]] && arch_native=x86_64
-  fetch_gh_release "neovim/neovim" "nvim-${OS}-${arch_native}\.tar\.gz$"
+  fetch_gh_release "neovim/neovim" "nvim-${OS}-${arch_native}\.tar\.gz"
   log "  $REPO_TAG"
-  # nvim tarball has a single top dir; merge its contents onto $PREFIX
   local top; top=$(ls -A "$EXTRACTED_DIR" | head -1)
   cp -a "$EXTRACTED_DIR/$top/." "$PREFIX/"
 }
@@ -76,9 +77,9 @@ install_nvim() {
 install_gh() {
   log "gh:"
   if [[ "$OS" == "macos" ]]; then
-    fetch_gh_release "cli/cli" "gh_[0-9.]+_macOS_${ARCH}\.zip$"
+    fetch_gh_release "cli/cli" "gh_[0-9.]+_macOS_${ARCH}\.zip"
   else
-    fetch_gh_release "cli/cli" "gh_[0-9.]+_linux_${ARCH}\.tar\.gz$"
+    fetch_gh_release "cli/cli" "gh_[0-9.]+_linux_${ARCH}\.tar\.gz"
   fi
   log "  $REPO_TAG"
   local top; top=$(ls -A "$EXTRACTED_DIR" | head -1)
