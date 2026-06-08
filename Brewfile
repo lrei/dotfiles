@@ -1,11 +1,16 @@
 # brew bundle --file ~/Brewfile
-tap "homebrew/cask"
 tap "anomalyco/tap"
+tap jundot/omlx https://github.com/jundot/omlx
+
 
 # CLI
 brew "tmux"
+brew "herdr"
+brew "hf"
 brew "wget"
 brew "opencode"
+cask "claude-code"
+cask "codex""
 brew "hermes-agent"
 brew "uv"
 brew "bun"
@@ -17,21 +22,21 @@ brew "zoxide"
 brew "fzf"
 brew "jq"
 brew "yt-dlp"
+brew "unzip"
+brew "sevenzip"
+brew "llama.cpp"
+brew "omlx"
 
 # GUI
 
 ## PIM
 cask "obsidian"
 cask "dropbox"
-cask "onedrive"
 cask "google-drive"
-cask "microsoft-teams"
 cask "libreoffice"
-cask "zoom"
 cask "anki"
 cask "zotero"
 cask "discord"
-
 
 ## Browsers 
 cask "google-chrome"
@@ -40,22 +45,41 @@ cask "brave-browser"
 cask "microsoft-edge"
 cask "vivaldi"
 cask "waterfox"
+cask "zen""
 
 ## Dev
 cask "visual-studio-code"
-cask "docker-desktop"
 cask "cmux"
 cask "ghostty"
 cask "textmate"
+cask "zed"
 
 ## AI
 cask "chatgpt"
-cask "claude-code"
+cask "claude""
+cask "google-gemini"
+cask "warp"
+cask "llamabarn"
+cask "codexbar"
 
 ## Media
 cask "brainfm"
 cask "spotify"
 cask "vlc"
+cask "iina"
+cask "transmission"
+
+## Mac Utility
+cask "raycast"
+cask "jordanbaird-ice"
+cask "rectangle"
+cask "maccy""
+cask "ice"
+cask "dockdoor"
+cask "mos"
+cask "the-unarchiver"
+cask "TheBoredTeam/boring-notch/boring-notch"
+cask "alt-tab""
 
 
 # Fonts
@@ -64,3 +88,10 @@ cask "font-iosevka"
 cask "font-iosevka-nerd-font"
 cask "font-iosevka-term-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+
+
+# Admin required
+cask "onedrive"
+cask "microsoft-teams"
+cask "zoom"
+cask "docker-desktop"
