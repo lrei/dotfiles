@@ -1,7 +1,5 @@
 # brew bundle --file ~/Brewfile
 tap "anomalyco/tap"
-tap jundot/omlx https://github.com/jundot/omlx
-
 
 # CLI
 brew "tmux"
@@ -10,7 +8,7 @@ brew "hf"
 brew "wget"
 brew "opencode"
 cask "claude-code"
-cask "codex""
+cask "codex"
 brew "hermes-agent"
 brew "uv"
 brew "bun"
@@ -25,7 +23,6 @@ brew "yt-dlp"
 brew "unzip"
 brew "sevenzip"
 brew "llama.cpp"
-brew "omlx"
 
 # GUI
 
@@ -45,7 +42,7 @@ cask "brave-browser"
 cask "microsoft-edge"
 cask "vivaldi"
 cask "waterfox"
-cask "zen""
+cask "zen"
 
 ## Dev
 cask "visual-studio-code"
@@ -56,7 +53,7 @@ cask "zed"
 
 ## AI
 cask "chatgpt"
-cask "claude""
+cask "claude"
 cask "google-gemini"
 cask "warp"
 cask "llamabarn"
@@ -73,13 +70,13 @@ cask "transmission"
 cask "raycast"
 cask "jordanbaird-ice"
 cask "rectangle"
-cask "maccy""
-cask "ice"
+cask "maccy"
+cask "jordanbaird-ice"
 cask "dockdoor"
 cask "mos"
 cask "the-unarchiver"
 cask "TheBoredTeam/boring-notch/boring-notch"
-cask "alt-tab""
+cask "alt-tab"
 
 
 # Fonts
