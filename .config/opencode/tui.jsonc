@@ -3,4 +3,5 @@
   "plugin": [
     "@slkiser/opencode-quota"
   ],
+  "theme": "lucent-orng"
 }
