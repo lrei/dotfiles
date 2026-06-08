@@ -3,6 +3,7 @@ tap "homebrew/cask"
 tap "anomalyco/tap"
 
 # CLI
+brew "tmux"
 brew "wget"
 brew "opencode"
 brew "hermes-agent"
