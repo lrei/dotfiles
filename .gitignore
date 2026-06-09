@@ -26,3 +26,6 @@ random_seed
 # env files containing secrets
 .env
 .envrc
+
+# OpenCode config now has its own repo
+.config/opencode/
