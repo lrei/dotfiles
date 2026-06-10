@@ -207,8 +207,8 @@ if [[ `uname` == 'Darwin' ]]
 then
         export OSX=1
         # iterm2 italic
-        if [[ -z "$TMUX" ]]; then export TERM=xterm-256color-italic; fi
-        alias ssh="TERM=xterm-256color ssh"
+        # if [[ -z "$TMUX" ]]; then export TERM=xterm-256color-italic; fi
+        # alias ssh="TERM=xterm-256color ssh"
         # HomeBrew analytics, cask, path
         export HOMEBREW_NO_ANALYTICS=1
         export HOMEBREW_CASK_OPTS="--appdir=/Applications"

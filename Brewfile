@@ -1,8 +1,10 @@
 # brew bundle --file ~/Brewfile
 tap "anomalyco/tap"
+tap "jundot/omlx"
 
 # CLI
 brew "tmux"
+brew "htop"
 brew "herdr"
 brew "hf"
 brew "wget"
@@ -13,16 +15,21 @@ brew "hermes-agent"
 brew "uv"
 brew "bun"
 brew "nvm"
+brew "glow"
 brew "neovim"
 brew "lazygit"
 brew "gh"
+brew "bat"
 brew "zoxide"
 brew "fzf"
+brew "fd"
 brew "jq"
 brew "yt-dlp"
 brew "unzip"
 brew "sevenzip"
 brew "llama.cpp"
+brew "fabric-ai"
+brew "apfel"
 
 # GUI
 
